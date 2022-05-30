@@ -19,7 +19,7 @@
 </head>
 <body>
     <h2>saveForm</h2>
-    <div class="container">
+    <div class="container text-center">
         <form action="/member/save" method="post" enctype="multipart/form-data">
             아이디: <input class="form-control" type="text" onblur="duplicateCheck()" id="memberId" name="memberId" placeholder="memberId"><br>
             <span id="dup-check-result"></span><br>
@@ -29,8 +29,8 @@
             이메일: <input class="form-control" type="text" name="memberEmail" placeholder="memberEmail"><br>
             전화번호: <input class="form-control mb-0" type="text" onblur="regExpMo()" id="memberMobile" name="memberMobile" placeholder="memberMobile"><br>
             <span id="mo-exp-check-result"></span><br>
-            프로필사진: <input type="file" name="memberFile" class="form-control">
-            <input type="submit" class="btn btn-primary form-control" value="회원가입">
+            프로필사진: <input type="file" name="memberFile" class="form-control mb-3">
+            <input type="submit" class="btn btn-primary" value="회원가입">
         </form>
     </div>
 </body>
