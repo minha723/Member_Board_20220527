@@ -13,9 +13,10 @@
 <head>
     <title>Title</title>
     <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 </head>
 <body>
-<h2>board/detail.jsp</h2>
+<jsp:include page="../layout/header.jsp" flush="false"></jsp:include>
 
 <div class="container text-center">
 
@@ -36,7 +37,7 @@
                  width="100">
         </p>
     </div>
-<button class="btn btn-outline-info" onclick="findAll()">목록</button>
+    <button class="btn btn-outline-info" onclick="findAll()">목록</button>
     <c:if test="${sessionScope.loginMemberId eq boardDetail.boardWriter}">
         <button class="btn btn-outline-warning" onclick="boardUpdate()">수정</button>
         <button class="btn btn-outline-danger" onclick="boardDelete()">삭제</button>
@@ -44,22 +45,92 @@
     <c:if test="${sessionScope.loginMemberId eq 'admin'}">
         <button class="btn btn-outline-danger" onclick="boardDelete()">삭제</button>
     </c:if>
-
-
 </div>
 
+<div class="container mt-5">
+    <div id="comment-write" class="input-group mb-3">
+        <div class="form-floating">
+            <input type="text" id="commentWriter" class="form-control" value="${sessionScope.loginMemberId}">
+            <label for="commentWriter">작성자</label>
+        </div>
+        <div class="form-floating">
+            <input type="text" id="commentContents" class="form-control" placeholder="내용">
+            <label for="commentContents">내용</label>
+        </div>
+        <button id="comment-write-btn" class="btn btn-primary">댓글작성</button>
+    </div>
+
+    <div id="comment-list">
+        <table class="table">
+            <tr>
+                <th>댓글번호</th>
+                <th>작성자</th>
+                <th>내용</th>
+                <th>작성시간</th>
+            </tr>
+            <c:forEach items="${commentList}" var="comment">
+                <tr>
+                    <td>${comment.id}</td>
+                    <td>${comment.commentWriter}</td>
+                    <td>${comment.commentContents}</td>
+                    <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss"
+                                        value="${comment.commentCreatedDate}"></fmt:formatDate></td>
+                </tr>
+            </c:forEach>
+        </table>
+    </div>
+
+</div>
 </body>
 <script>
     const findAll = () => {
         location.href = "/board/findAll";
     }
     const boardDelete = () => {
-      location.href = "/board/delete?id=${boardDetail.id}";
+        location.href = "/board/delete?id=${boardDetail.id}";
     }
 
     const boardUpdate = () => {
-      location.href = "/board/update?id=${boardDetail.id}&loginId=${sessionScope.loginId}";
+        location.href = "/board/update?id=${boardDetail.id}&loginId=${sessionScope.loginId}";
     }
+
+    $("#comment-write-btn").click(function (){
+       const cWriter = document.getElementById("commentWriter").value;
+       const cContents = $("#commentContents").val();
+       const boardId = '${boardDetail.id}';
+       $.ajax({
+          type: "post",
+          url:"/comment/save",
+          data:{
+              "commentWriter": cWriter,
+              "commentContents": cContents,
+              "boardId": boardId,
+          },
+          dataType:"json",
+          success: function (result){
+              console.log(result);
+              let output = "<table class='table'>";
+              output += "<tr><th>댓글번호</th>";
+              output += "<th>작성자</th>";
+              output += "<th>내용</th>";
+              output += "<th>작성시간</th></tr>";
+              for(let i in result){
+                  output +="<tr>";
+                  output +="<td>"+result[i].id+"</td>";
+                  output +="<td>"+result[i].commentWriter+"</td>";
+                  output +="<td>"+result[i].commentContents+"</td>";
+                  output +="<td>"+result[i].commentCreatedDate+"</td>";
+                  output +="</tr>";
+              }
+              output += "</table>";
+              document.getElementById('comment-list').innerHTML = output;
+              document.getElementById('commentContents').value='';
+          },
+           error: function (){
+              alert("오타 체크");
+           }
+       });
+    });
 
 </script>
 </html>

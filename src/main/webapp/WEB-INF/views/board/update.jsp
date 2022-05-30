@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
 </head>
 <body>
+<jsp:include page="../layout/header.jsp" flush="false"></jsp:include>
+
 <div class="py-5 container text-center">
     <form action="/board/update" method="post" name="updateForm">
         <input type="hidden" class="form-control mb-2" name="id" value="${board.id}" readonly>

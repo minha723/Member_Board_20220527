@@ -4,6 +4,14 @@
 
 
 <mapper namespace="Comment">
+    <insert id="save" parameterType="comment">
+        insert into commentTable(commentWriter, commentContents, commentCreatedDate, boardId)
+        values (#{commentWriter}, #{commentContents}, now(), #{boardId})
+    </insert>
+
+    <select id="findAll" parameterType="Long" resultType="comment">
+        select * from commentTable where boardId=#{boardId} order by id desc
+    </select>
 
 </mapper>
 

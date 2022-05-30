@@ -13,8 +13,9 @@
 
 </head>
 <body>
+<jsp:include page="../layout/header.jsp" flush="false"></jsp:include>
+
 <div class="container">
-    <h2>login.jsp</h2>
     <form action="/member/login" method="post">
         <input type="text" class="form-control mb-2" name="memberId" placeholder="아이디">
         <input type="text" class="form-control mb-2" name="memberPassword" placeholder="비밀번호">

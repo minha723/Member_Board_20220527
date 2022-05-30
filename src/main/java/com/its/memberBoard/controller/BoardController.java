@@ -1,9 +1,11 @@
 package com.its.memberBoard.controller;
 
 import com.its.memberBoard.dto.BoardDTO;
+import com.its.memberBoard.dto.CommentDTO;
 import com.its.memberBoard.dto.MemberDTO;
 import com.its.memberBoard.dto.PageDTO;
 import com.its.memberBoard.service.BoardService;
+import com.its.memberBoard.service.CommentService;
 import com.its.memberBoard.service.MemberService;
 //import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +22,10 @@ import java.util.List;
 public class BoardController {
     @Autowired
     private BoardService boardService;
-
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("/save")
     public String saveForm(){
@@ -45,10 +48,13 @@ public class BoardController {
     }
 
     @GetMapping("/detail")
-    public String findById(@RequestParam("id") Long id, Model model){
+    public String findById(@RequestParam("id") Long id, Model model,
+                           @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         BoardDTO boardDTO = boardService.findById(id);
-        System.out.println("boardDTO = " + boardDTO);
         model.addAttribute("boardDetail",boardDTO);
+        model.addAttribute("page", page);
+        List<CommentDTO> commentDTOList = commentService.findAll(id);
+        model.addAttribute("commentList", commentDTOList);
         return "board/detail";
     }
     @GetMapping("/delete")

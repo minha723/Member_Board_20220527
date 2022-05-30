@@ -23,7 +23,9 @@
     </script>
 </head>
 <body>
-    <h2> index 페이지</h2>
+
+<jsp:include page="./layout/header.jsp" flush="false"></jsp:include>
+
     <div class="container text-center">
 
     <button class="btn btn-outline-success" onclick="signIn()">회원가입</button>

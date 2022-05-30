@@ -12,8 +12,7 @@
     <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
 </head>
 <body>
-<h2>board/save.jsp</h2>
-
+<jsp:include page="../layout/header.jsp" flush="false"></jsp:include>
 <div class="container text-center">
     <h2>글을 작성하세요</h2>
     <form action="/board/save" method="post" enctype="multipart/form-data">

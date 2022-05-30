@@ -15,7 +15,8 @@
     <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
 </head>
 <body>
-<h2>board.list.jsp</h2>
+<jsp:include page="../layout/header.jsp" flush="false"></jsp:include>
+
 
 <div class="container">
     <form action="/board/search" method="get">
@@ -43,7 +44,7 @@
             <tr>
                 <td>  ${board.id} </td>
                 <td>  ${board.boardWriter}</td>
-                <td><a href="/board/detail?id=${board.id}">${board.boardTitle}</a></td>
+                <td><a href="/board/detail?page=${paging.page}&id=${board.id}">${board.boardTitle}</a></td>
                 <td> <fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss" value="${board.boardCreatedDate}"></fmt:formatDate> </td>
                 <td> <span class="badge bg-primary rounded-pill">${board.boardHits} </span></td>
             </tr>
@@ -97,21 +98,37 @@
     </ul>
 </div>
 
-
-<br>
-<a href="/board/save">게시글 작성</a>
-
+<div class="container text-center">
 <c:choose>
     <c:when test="${sessionScope.loginMemberId eq 'admin'}">
-        <a href="/member/logout">로그아웃</a>
-        <a href="/member/findAll">회원목록</a>
+        <button class="btn btn-outline-primary" onclick="save()">게시글 작성</button>
+        <button class="btn btn-outline-primary" onclick="logOut()">로그아웃</button>
+        <button class="btn btn-outline-primary" onclick="findMember()">회원목록</button>
+    </c:when>
+    <c:when test="${sessionScope.loginMemberId != null}">
+        <button class="btn btn-outline-primary" onclick="save()">게시글 작성</button>
+        <button class="btn btn-outline-primary" onclick="logOut()">로그아웃</button>
+        <button class="btn btn-outline-primary" onclick="myPage()">회원목록</button>
     </c:when>
     <c:otherwise>
-        <a href="/member/logout">로그아웃</a>
-        <a href="/member/update">마이페이지</a>
+        <button class="btn btn-outline-primary" onclick="logIn()">로그인</button>
     </c:otherwise>
 </c:choose>
-
+</div>
 </body>
+<script>
+    const save = () => {
+      location.href="/board/save";
+    }
+    const logOut = () => {
+      location.href="/member/logout";
+    }
+    const findMember = () => {
+      location.href="/member/findAll"
+    }
+    const myPage = () => {
+        location.href="/member/update"
+    }
 
+</script>
 </html>
