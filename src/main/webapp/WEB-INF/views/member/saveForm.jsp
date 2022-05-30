@@ -19,6 +19,7 @@
 </head>
 <body>
     <h2>saveForm</h2>
+
     <div class="container text-center">
         <form action="/member/save" method="post" enctype="multipart/form-data">
             아이디: <input class="form-control" type="text" onblur="duplicateCheck()" id="memberId" name="memberId" placeholder="memberId"><br>
