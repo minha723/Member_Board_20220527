@@ -45,4 +45,8 @@ public class BoardRepository {
     public int update(BoardDTO boardDTO) {
         return sql.update("Board.update", boardDTO);
     }
+
+    public List<BoardDTO> findAllHits(Map<String, Integer> pagingParam) {
+        return sql.selectList("Board.findAllHits", pagingParam);
+    }
 }

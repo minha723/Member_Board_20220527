@@ -14,6 +14,10 @@
         select * from boardTable order by id desc limit #{start}, #{limit}
     </select>
 
+    <select id="findAllHits" resultType="board" parameterType="java.util.HashMap">
+        select * from boardTable order by boardHits desc limit #{start}, #{limit}
+    </select>
+
     <select id="findById" parameterType="Long" resultType="board">
         select * from boardTable where id=#{id}
     </select>

@@ -13,6 +13,10 @@
         select * from commentTable where boardId=#{boardId} order by id desc
     </select>
 
+    <delete id="delete" parameterType="Long">
+        delete from commentTable where id=#{id}
+    </delete>
+
 </mapper>
 
 

@@ -15,12 +15,18 @@
 <body>
 <jsp:include page="../layout/header.jsp" flush="false"></jsp:include>
 
-<div class="container">
+<div class="container text-center">
     <form action="/member/login" method="post">
         <input type="text" class="form-control mb-2" name="memberId" placeholder="아이디">
         <input type="text" class="form-control mb-2" name="memberPassword" placeholder="비밀번호">
-        <input class="btn btn-primary" type="submit" value="제출">
+        <input class="btn btn-primary" type="submit" value="로그인">
+        <input class="btn btn-primary" onclick="signUp()" value="회원가입">
     </form>
 </div>
 </body>
+<script>
+    const signUp = () => {
+      location.href="/member/save";
+    }
+</script>
 </html>

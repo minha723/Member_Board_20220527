@@ -37,6 +37,7 @@
                  width="100">
         </p>
     </div>
+
     <button class="btn btn-outline-info" onclick="findAll()">목록</button>
     <c:if test="${sessionScope.loginMemberId eq boardDetail.boardWriter}">
         <button class="btn btn-outline-warning" onclick="boardUpdate()">수정</button>
@@ -48,17 +49,27 @@
 </div>
 
 <div class="container mt-5">
-    <div id="comment-write" class="input-group mb-3">
-        <div class="form-floating">
-            <input type="text" id="commentWriter" class="form-control" value="${sessionScope.loginMemberId}">
-            <label for="commentWriter">작성자</label>
-        </div>
-        <div class="form-floating">
-            <input type="text" id="commentContents" class="form-control" placeholder="내용">
-            <label for="commentContents">내용</label>
-        </div>
-        <button id="comment-write-btn" class="btn btn-primary">댓글작성</button>
-    </div>
+    <c:choose>
+        <c:when test="${sessionScope.loginId != null}">
+            <div id="comment-write" class="input-group mb-3">
+                <div class="form-floating">
+                    <input type="text" id="commentWriter" class="form-control" value="${sessionScope.loginMemberId}"
+                           readonly>
+                    <label for="commentWriter">작성자</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" id="commentContents" class="form-control" placeholder="내용">
+                    <label for="commentContents">내용</label>
+                </div>
+                <button id="comment-write-btn" class="btn btn-primary">댓글작성</button>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div class="input-group">
+                <p>로그인 후 댓글 작성이 가능합니다.</p> &nbsp;
+            </div>
+        </c:otherwise>
+    </c:choose>
 
     <div id="comment-list">
         <table class="table">
@@ -67,6 +78,7 @@
                 <th>작성자</th>
                 <th>내용</th>
                 <th>작성시간</th>
+                <th>삭제</th>
             </tr>
             <c:forEach items="${commentList}" var="comment">
                 <tr>
@@ -75,6 +87,17 @@
                     <td>${comment.commentContents}</td>
                     <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss"
                                         value="${comment.commentCreatedDate}"></fmt:formatDate></td>
+                    <c:choose>
+                        <c:when test="${sessionScope.loginMemberId eq 'admin'}">
+                            <td><a href="/comment/delete?id=${comment.id}">삭제</a></td>
+                        </c:when>
+                        <c:when test="${sessionScope.loginMemberId eq comment.commentWriter}">
+                            <td><a href="/comment/delete?id=${comment.id}&boardId=${boardDetail.id}">삭제</a></td>
+                        </c:when>
+                        <c:otherwise>
+                            <td></td>
+                        </c:otherwise>
+                    </c:choose>
                 </tr>
             </c:forEach>
         </table>
@@ -94,42 +117,53 @@
         location.href = "/board/update?id=${boardDetail.id}&loginId=${sessionScope.loginId}";
     }
 
-    $("#comment-write-btn").click(function (){
-       const cWriter = document.getElementById("commentWriter").value;
-       const cContents = $("#commentContents").val();
-       const boardId = '${boardDetail.id}';
-       $.ajax({
-          type: "post",
-          url:"/comment/save",
-          data:{
-              "commentWriter": cWriter,
-              "commentContents": cContents,
-              "boardId": boardId,
-          },
-          dataType:"json",
-          success: function (result){
-              console.log(result);
-              let output = "<table class='table'>";
-              output += "<tr><th>댓글번호</th>";
-              output += "<th>작성자</th>";
-              output += "<th>내용</th>";
-              output += "<th>작성시간</th></tr>";
-              for(let i in result){
-                  output +="<tr>";
-                  output +="<td>"+result[i].id+"</td>";
-                  output +="<td>"+result[i].commentWriter+"</td>";
-                  output +="<td>"+result[i].commentContents+"</td>";
-                  output +="<td>"+result[i].commentCreatedDate+"</td>";
-                  output +="</tr>";
-              }
-              output += "</table>";
-              document.getElementById('comment-list').innerHTML = output;
-              document.getElementById('commentContents').value='';
-          },
-           error: function (){
-              alert("오타 체크");
-           }
-       });
+
+    $("#comment-write-btn").click(function () {
+        const cWriter = document.getElementById("commentWriter").value;
+        const cContents = $("#commentContents").val();
+        const boardId = '${boardDetail.id}';
+        $.ajax({
+            type: "post",
+            url: "/comment/save",
+            data: {
+                "commentWriter": cWriter,
+                "commentContents": cContents,
+                "boardId": boardId,
+            },
+            dataType: "json",
+            success: function (result) {
+
+                let output = "<table class='table'>";
+                output += "<tr><th>댓글번호</th>";
+                output += "<th>작성자</th>";
+                output += "<th>내용</th>";
+                output += "<th>작성시간</th>";
+                output += "<th>삭제</th></tr>";
+                for (let i in result) {
+                    output += "<tr>";
+                    output += "<td>" + result[i].id + "</td>";
+                    output += "<td>" + result[i].commentWriter + "</td>";
+                    output += "<td>" + result[i].commentContents + "</td>";
+                    output += "<td>" + result[i].commentCreatedDate + "</td>";
+                    if ('${sessionScope.loginMemberId}' == 'admin') {
+                        output += "<td><a href='/comment/delete?id=" + result[i].id +
+                            "&boardId=" + result[i].boardId + "'>" + "삭제</a></td>";
+                    } else if (result[i].commentWriter == '${sessionScope.loginMemberId}') {
+                        output += "<td><a href='/comment/delete?id=" + result[i].id +
+                            "&boardId=" + result[i].boardId + "'>" + "삭제</a></td>";
+                    } else {
+                        output += "<td></td>";
+                    }
+                    output += "</tr>";
+                }
+                output += "</table>";
+                document.getElementById('comment-list').innerHTML = output;
+                document.getElementById('commentContents').value = '';
+            },
+            error: function () {
+                alert("오타 체크");
+            }
+        });
     });
 
 </script>

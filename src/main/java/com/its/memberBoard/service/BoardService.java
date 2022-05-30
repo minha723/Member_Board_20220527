@@ -84,4 +84,12 @@ public class BoardService {
             return false;
         }
     }
+
+    public List<BoardDTO> findAllHits(int page) {
+        int pagingStart = (page - 1) * PAGE_LIMIT;
+        Map<String, Integer> pagingParam = new HashMap<>();
+        pagingParam.put("start", pagingStart);
+        pagingParam.put("limit", PAGE_LIMIT);
+        return boardRepository.findAllHits(pagingParam);
+    }
 }

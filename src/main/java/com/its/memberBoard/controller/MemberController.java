@@ -38,34 +38,22 @@ public class MemberController {
 
     @PostMapping("/duplicate-check")
     public @ResponseBody String duplicateCheck(@RequestParam("memberId") String memberId){
-        String duplicateResult = memberService.duplicateCheck(memberId);
-        return duplicateResult;
+        String checkResult = memberService.duplicateCheck(memberId);
+        return checkResult;
     }
 
-    @GetMapping("/login")
-    public String loginForm(){
-        return "member/login";
-    }
-
-    @PostMapping("/login")
-    public String login(@ModelAttribute MemberDTO memberDTO, HttpSession session){
-        MemberDTO loginMember = memberService.login(memberDTO);
-        System.out.println("loginMember = " + loginMember);
-        if(loginMember!=null){
-            session.setAttribute("loginMemberId",loginMember.getMemberId());
-            session.setAttribute("loginId", loginMember.getId());
-            return "redirect: /board/findAll";
-        }else {
-            return "member/login";
-        }
-    }
     @GetMapping("/findAll")
     public String findAll(Model model){
-        List<MemberDTO> memberDTOList = memberService.findAll();
-        model.addAttribute("memberList", memberDTOList);
+        List<MemberDTO> memberList = memberService.findAll();
+        model.addAttribute("memberList", memberList);
         return "member/list";
     }
-
+    @GetMapping("/detail")
+    public String findById(@RequestParam("id") Long id, Model model){
+        MemberDTO memberDTO = memberService.findById(id);
+        model.addAttribute("member", memberDTO);
+        return "member/detail";
+    }
     @GetMapping("/delete")
     public String delete(@RequestParam("id") Long id){
         if(memberService.delete(id)){
@@ -74,19 +62,6 @@ public class MemberController {
             return "delete-fail";
         }
     }
-    @GetMapping ("/logout")
-    public String logout(HttpSession session){
-        session.invalidate();
-        return "index";
-    }
-
-    @GetMapping("/detail")
-    public String findById(@RequestParam("id") Long id, Model model){
-        MemberDTO memberDTO = memberService.findById(id);
-        model.addAttribute("member", memberDTO);
-        return "member/detail";
-    }
-
     @GetMapping("/update")
     public String updateForm(HttpSession session, Model model){
         Long updateId = (Long) session.getAttribute("loginId");
@@ -98,6 +73,28 @@ public class MemberController {
     @PostMapping("/update")
     public String update(@ModelAttribute MemberDTO memberDTO){
         memberService.update(memberDTO);
-        return "redirect: /board/findAll";
+        return "redirect: /member/detail?id=" + memberDTO.getId();
     }
+    @GetMapping("/login")
+    public String loginForm(){
+        return "member/login";
+    }
+    @PostMapping("/login")
+    public String login(@ModelAttribute MemberDTO memberDTO, HttpSession session){
+        MemberDTO loginMember = memberService.login(memberDTO);
+        if(loginMember!=null){
+            session.setAttribute("loginMemberId",loginMember.getMemberId());
+            session.setAttribute("loginId", loginMember.getId());
+            return "member/main";
+        }else {
+            return "member/login";
+        }
+    }
+
+    @GetMapping ("/logout")
+    public String logout(HttpSession session){
+        session.invalidate();
+        return "index";
+    }
+
 }

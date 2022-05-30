@@ -13,7 +13,6 @@
 </head>
 <body>
 <div class="container">
-    <h2>update.jsp</h2>
     <div class="py-5 text-center">
         <form action="/member/update" method="post" name="updateForm">
             id: <input class="form-control mb-2" type="text" name="id" value="${updateMember.id}" readonly><br>
@@ -23,6 +22,7 @@
             memberEmail: <input class="form-control mb-2" type="text" name="memberEmail" value="${updateMember.memberEmail}"><br>
             memberMobile: <input class="form-control mb-2" type="text" name="memberMobile" value="${updateMember.memberMobile}"><br>
             <input type="button" onclick="update()" class="btn btn-primary" value="정보수정">
+            <input type="button" onclick="memberDelete()" class="btn btn-primary" value="회원탈퇴">
         </form>
     </div>
 </div>
@@ -36,6 +36,15 @@
       }else {
           alert("비밀번호를 확인해주세요.")
       }
+    }
+    const memberDelete = () => {
+        const pwConfirm = document.getElementById("pwConfirm").value;
+        const pwDB = '${updateMember.memberPassword}';
+        if(pwConfirm == pwDB){
+            location.href="/member/delete?id=${updateMember.id}";
+        }else {
+            alert("비밀번호를 확인해주세요.")
+        }
     }
 </script>
 </html>

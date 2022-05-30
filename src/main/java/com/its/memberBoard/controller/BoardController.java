@@ -47,6 +47,16 @@ public class BoardController {
         return "board/list";
     }
 
+    @GetMapping("/findAllHits")
+    public String findAllHits(@RequestParam(value="page", required = false, defaultValue = "1") int page,
+                          Model model){
+        List<BoardDTO> boardDTOList = boardService.findAllHits(page);
+        PageDTO paging = boardService.paging(page);
+        model.addAttribute("boardList", boardDTOList);
+        model.addAttribute("paging", paging);
+        return "board/list";
+    }
+
     @GetMapping("/detail")
     public String findById(@RequestParam("id") Long id, Model model,
                            @RequestParam(value = "page", required = false, defaultValue = "1") int page){
@@ -62,14 +72,6 @@ public class BoardController {
         boardService.delete(id);
         return "redirect: /board/findAll";
     }
-    @GetMapping("/search")
-    public String search(@RequestParam("searchType") String searchType,
-                         @RequestParam("q") String q, Model model){
-    List<BoardDTO> searchList =boardService.search(searchType, q);
-    model.addAttribute("boardList", searchList);
-    return "board/list";
-    }
-
     @GetMapping("/update")
     public String updateForm(@RequestParam("id") Long id,
                          @RequestParam("loginId") Long loginId, Model model){
@@ -88,5 +90,13 @@ public class BoardController {
             return "redirect: /board/findAll";
         }
     }
+    @GetMapping("/search")
+    public String search(@RequestParam("searchType") String searchType,
+                         @RequestParam("q") String q, Model model){
+    List<BoardDTO> searchList =boardService.search(searchType, q);
+    model.addAttribute("boardList", searchList);
+    return "board/list";
+    }
+
 
 }

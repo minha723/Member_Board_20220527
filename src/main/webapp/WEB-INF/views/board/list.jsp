@@ -27,8 +27,23 @@
         <input type="text" name="q" placeholder="검색어입력...">
         <input type="submit" value="검색">
     </form>
-
 </div>
+
+<div class="container text-end">
+    <button class="btn btn-outline-primary" onclick="hits()">조회순으로 목록보기</button>
+</div>
+
+<%--<div class="container text-end">--%>
+<%--<form action="/board/viewNum" method="get">--%>
+<%--    <select class="" name="viewNum" id="viewNum">--%>
+<%--        <option value="3">3</option>--%>
+<%--        <option value="5">5</option>--%>
+<%--        <option value="7">7</option>--%>
+<%--        <option value="10">10</option>--%>
+<%--    </select>--%>
+<%--</form>--%>
+<%--</div>--%>
+
 
 <div class="container">
     <table class="table table-hover">
@@ -42,11 +57,12 @@
 
         <c:forEach var="board" items="${boardList}">
             <tr>
-                <td>  ${board.id} </td>
-                <td>  ${board.boardWriter}</td>
+                <td> ${board.id} </td>
+                <td> ${board.boardWriter}</td>
                 <td><a href="/board/detail?page=${paging.page}&id=${board.id}">${board.boardTitle}</a></td>
-                <td> <fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss" value="${board.boardCreatedDate}"></fmt:formatDate> </td>
-                <td> <span class="badge bg-primary rounded-pill">${board.boardHits} </span></td>
+                <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss"
+                                    value="${board.boardCreatedDate}"></fmt:formatDate></td>
+                <td><span class="badge bg-primary rounded-pill">${board.boardHits} </span></td>
             </tr>
         </c:forEach>
 
@@ -99,35 +115,41 @@
 </div>
 
 <div class="container text-center">
-<c:choose>
-    <c:when test="${sessionScope.loginMemberId eq 'admin'}">
-        <button class="btn btn-outline-primary" onclick="save()">게시글 작성</button>
-        <button class="btn btn-outline-primary" onclick="logOut()">로그아웃</button>
-        <button class="btn btn-outline-primary" onclick="findMember()">회원목록</button>
-    </c:when>
-    <c:when test="${sessionScope.loginMemberId != null}">
-        <button class="btn btn-outline-primary" onclick="save()">게시글 작성</button>
-        <button class="btn btn-outline-primary" onclick="logOut()">로그아웃</button>
-        <button class="btn btn-outline-primary" onclick="myPage()">회원목록</button>
-    </c:when>
-    <c:otherwise>
-        <button class="btn btn-outline-primary" onclick="logIn()">로그인</button>
-    </c:otherwise>
-</c:choose>
+    <c:choose>
+        <c:when test="${sessionScope.loginMemberId eq 'admin'}">
+            <button class="btn btn-outline-primary" onclick="save()">게시글 작성</button>
+            <button class="btn btn-outline-primary" onclick="logOut()">로그아웃</button>
+            <button class="btn btn-outline-primary" onclick="findMember()">회원목록</button>
+        </c:when>
+        <c:when test="${sessionScope.loginMemberId != null}">
+            <button class="btn btn-outline-primary" onclick="save()">게시글 작성</button>
+            <button class="btn btn-outline-primary" onclick="logOut()">로그아웃</button>
+            <button class="btn btn-outline-primary" onclick="myPage()">마이페이지</button>
+        </c:when>
+        <c:otherwise>
+            <button class="btn btn-outline-primary" onclick="logIn()">로그인</button>
+        </c:otherwise>
+    </c:choose>
 </div>
 </body>
 <script>
     const save = () => {
-      location.href="/board/save";
+        location.href = "/board/save";
     }
     const logOut = () => {
-      location.href="/member/logout";
+        location.href = "/member/logout";
     }
     const findMember = () => {
-      location.href="/member/findAll"
+        location.href = "/member/findAll";
     }
     const myPage = () => {
-        location.href="/member/update"
+        location.href = "/member/update";
+    }
+    const logIn = () => {
+        location.href = "/member/login";
+    }
+    const hits = () => {
+        location.href = "/board/findAllHits";
     }
 
 </script>
