@@ -74,4 +74,14 @@ public class BoardService {
         searchMap.put("q", q);
         return boardRepository.search(searchMap);
     }
+
+
+    public boolean update(BoardDTO boardDTO) {
+        int result = boardRepository.update(boardDTO);
+        if(result > 0){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

@@ -98,6 +98,6 @@ public class MemberController {
     @PostMapping("/update")
     public String update(@ModelAttribute MemberDTO memberDTO){
         memberService.update(memberDTO);
-        return "board/list";
+        return "redirect: /board/findAll";
     }
 }

@@ -58,7 +58,7 @@
     }
 
     const boardUpdate = () => {
-      location.href = "/board/update?id=${boardDetail.id}";
+      location.href = "/board/update?id=${boardDetail.id}&loginId=${sessionScope.loginId}";
     }
 
 </script>

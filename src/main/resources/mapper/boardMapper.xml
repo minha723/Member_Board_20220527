@@ -35,6 +35,10 @@
                                             like concat('%', #{q}, '%') order by id desc
     </select>
 
+    <update id="update" parameterType="board">
+        update boardTable set boardTitle=#{boardTitle}, boardContents=#{boardContents} where id=#{id}
+    </update>
+
 
 </mapper>
 

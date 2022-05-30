@@ -1,8 +1,11 @@
 package com.its.memberBoard.controller;
 
 import com.its.memberBoard.dto.BoardDTO;
+import com.its.memberBoard.dto.MemberDTO;
 import com.its.memberBoard.dto.PageDTO;
 import com.its.memberBoard.service.BoardService;
+import com.its.memberBoard.service.MemberService;
+//import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +20,9 @@ import java.util.List;
 public class BoardController {
     @Autowired
     private BoardService boardService;
+
+    @Autowired
+    private MemberService memberService;
 
     @GetMapping("/save")
     public String saveForm(){
@@ -57,4 +63,24 @@ public class BoardController {
     model.addAttribute("boardList", searchList);
     return "board/list";
     }
+
+    @GetMapping("/update")
+    public String updateForm(@RequestParam("id") Long id,
+                         @RequestParam("loginId") Long loginId, Model model){
+        BoardDTO boardDTO = boardService.findById(id);
+        MemberDTO memberDTO = memberService.findById(loginId);
+        model.addAttribute("board", boardDTO);
+        model.addAttribute("member", memberDTO);
+        return "board/update";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute BoardDTO boardDTO){
+        if(boardService.update(boardDTO)){
+            return "redirect: /board/detail?id=" + boardDTO.getId();
+        }else {
+            return "redirect: /board/findAll";
+        }
+    }
+
 }
