@@ -54,11 +54,7 @@ public class MemberController {
         if(loginMember!=null){
             session.setAttribute("loginMemberId",loginMember.getMemberId());
             session.setAttribute("loginId", loginMember.getId());
-            if(loginMember.getMemberId() == "admin"){
-                return "member/admin";
-            } else{
-            return "board/list";
-            }
+            return "redirect: /board/findAll";
         }else {
             return "member/login";
         }

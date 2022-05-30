@@ -6,13 +6,36 @@
 <mapper namespace="Board">
 
     <insert id="save" parameterType="board">
-        insert into board_table (boardTitle, boardWriter, boardContents, boardCreatedDate, boardFileName)
+        insert into boardTable (boardTitle, boardWriter, boardContents, boardCreatedDate, boardFileName)
         values (#{boardTitle}, #{boardWriter}, #{boardContents}, now(), #{boardFileName})
     </insert>
 
-    <select id="findAll" resultType="board">
-        select * from boardTable;
+    <select id="findAll" resultType="board" parameterType="java.util.HashMap">
+        select * from boardTable order by id desc limit #{start}, #{limit}
     </select>
+
+    <select id="findById" parameterType="Long" resultType="board">
+        select * from boardTable where id=#{id}
+    </select>
+
+    <update id="updateHits" parameterType="Long">
+        update boardtable set boardHits=boardHits+1 where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        delete from boardTable where id=#{id}
+    </delete>
+
+    <select id="count" resultType="int">
+        select count(id) from boardTable
+    </select>
+
+    <select id="search" resultType="board" parameterType="java.util.HashMap">
+        select * from boardTable where ${searchType}
+                                            like concat('%', #{q}, '%') order by id desc
+    </select>
+
+
 </mapper>
 
 

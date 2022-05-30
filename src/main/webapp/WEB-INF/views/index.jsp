@@ -29,7 +29,6 @@
     <button class="btn btn-outline-success" onclick="signIn()">회원가입</button>
     <button class="btn btn-outline-success" onclick="logIn()">로그인</button>
     <button class="btn btn-outline-success" onclick="findAllBoard()">글목록</button>
-        <a href="/member/findAll">회원 목록</a>
     </div>
 
 </body>
