@@ -10,9 +10,12 @@
 <head>
     <title>Title</title>
     <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 </head>
 <body>
-<h2>detail.jsp</h2>
+<jsp:include page="../layout/header.jsp" flush="false"></jsp:include>
+
 <table class="table">
     <tr>
         <th>id</th>
@@ -22,7 +25,10 @@
         <th>memberEmail</th>
         <th>memberMobile</th>
         <th>memberFile</th>
-        <th>삭제</th>
+        <c:if test="${sessionScope.loginMemberId eq 'admin'}">
+            <th>삭제</th>
+        </c:if>
+
     </tr>
     <tr>
         <td> ${member.id} </td>
@@ -33,7 +39,9 @@
         <td> ${member.memberMobile}</td>
         <td><img src="${pageContext.request.contextPath}/upload/${member.memberFileName}"
                  alt="" height="100" width="100"></td>
-        <td><a href="/member/delete?id=${member.id}">삭제</a></td>
+        <c:if test="${sessionScope.loginMemberId eq 'admin'}">
+            <td><a href="/member/delete?id=${member.id}">삭제</a></td>
+        </c:if>
     </tr>
 </table>
 

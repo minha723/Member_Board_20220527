@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
 </head>
 <body>
+<jsp:include page="../layout/header.jsp" flush="false"></jsp:include>
+
 <div class="container">
     <div class="py-5 text-center">
         <form action="/member/update" method="post" name="updateForm">
