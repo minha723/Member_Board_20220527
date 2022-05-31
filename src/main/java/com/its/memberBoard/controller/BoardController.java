@@ -57,6 +57,16 @@ public class BoardController {
         return "board/list";
     }
 
+    @GetMapping("/viewNum")
+    public String viewNum(@RequestParam(value="page", required = false, defaultValue = "1") int page,
+                          @RequestParam("viewNum") int viewNum, Model model){
+        List<BoardDTO> boardDTOList = boardService.findAllNum(page, viewNum);
+        PageDTO paging = boardService.pagingNum(page, viewNum);
+        model.addAttribute("boardList", boardDTOList);
+        model.addAttribute("paging", paging);
+        return "board/list";
+    }
+
     @GetMapping("/detail")
     public String findById(@RequestParam("id") Long id, Model model,
                            @RequestParam(value = "page", required = false, defaultValue = "1") int page){

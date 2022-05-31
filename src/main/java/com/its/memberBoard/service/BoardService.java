@@ -20,8 +20,9 @@ import java.util.Map;
 public class BoardService {
     @Autowired
     private BoardRepository boardRepository;
-    private static final int PAGE_LIMIT = 5; // 한 페이지에 보여줄 글 갯수
+//    private static final int PAGE_LIMIT = 5; // 한 페이지에 보여줄 글 갯수
     private static final int BLOCK_LIMIT = 3;
+    int PAGE_LIMIT = 5;
 
     public List<BoardDTO> findAll(int page) {
         int pagingStart = (page - 1) * PAGE_LIMIT;
@@ -29,6 +30,21 @@ public class BoardService {
         pagingParam.put("start", pagingStart);
         pagingParam.put("limit", PAGE_LIMIT);
         return boardRepository.findAll(pagingParam);
+    }
+
+    public PageDTO paging(int page) {
+    int boardCount = boardRepository.boardCount();
+    int maxPage= (int) (Math.ceil((double) boardCount / PAGE_LIMIT));
+    int startPage = (((int) (Math.ceil((double) page / BLOCK_LIMIT))) - 1) * BLOCK_LIMIT + 1;
+    int endPage = startPage + BLOCK_LIMIT - 1;
+        if (endPage > maxPage)
+            endPage = maxPage;
+        PageDTO paging = new PageDTO();
+        paging.setPage(page);
+        paging.setStartPage(startPage);
+        paging.setEndPage(endPage);
+        paging.setMaxPage(maxPage);
+        return paging;
     }
 
     public void save(BoardDTO boardDTO) throws IOException {
@@ -52,20 +68,6 @@ public class BoardService {
         boardRepository.delete(id);
     }
 
-    public PageDTO paging(int page) {
-    int boardCount = boardRepository.boardCount();
-    int maxPage= (int) (Math.ceil((double) boardCount / PAGE_LIMIT));
-    int startPage = (((int) (Math.ceil((double) page / BLOCK_LIMIT))) - 1) * BLOCK_LIMIT + 1;
-    int endPage = startPage + BLOCK_LIMIT - 1;
-        if (endPage > maxPage)
-            endPage = maxPage;
-        PageDTO paging = new PageDTO();
-        paging.setPage(page);
-        paging.setStartPage(startPage);
-        paging.setEndPage(endPage);
-        paging.setMaxPage(maxPage);
-        return paging;
-    }
 
 
     public List<BoardDTO> search(String searchType, String q) {
@@ -91,5 +93,30 @@ public class BoardService {
         pagingParam.put("start", pagingStart);
         pagingParam.put("limit", PAGE_LIMIT);
         return boardRepository.findAllHits(pagingParam);
+    }
+
+    public List<BoardDTO> findAllNum(int page, int viewNum) {
+        PAGE_LIMIT = viewNum;
+        int pagingStart = (page - 1) * PAGE_LIMIT;
+        Map<String, Integer> pagingParam = new HashMap<>();
+        pagingParam.put("start", pagingStart);
+        pagingParam.put("limit", PAGE_LIMIT);
+        return boardRepository.findAll(pagingParam);
+    }
+
+    public PageDTO pagingNum(int page, int viewNum) {
+        int boardCount = boardRepository.boardCount();
+        PAGE_LIMIT = viewNum;
+        int maxPage= (int) (Math.ceil((double) boardCount / PAGE_LIMIT));
+        int startPage = (((int) (Math.ceil((double) page / BLOCK_LIMIT))) - 1) * BLOCK_LIMIT + 1;
+        int endPage = startPage + BLOCK_LIMIT - 1;
+        if (endPage > maxPage)
+            endPage = maxPage;
+        PageDTO paging = new PageDTO();
+        paging.setPage(page);
+        paging.setStartPage(startPage);
+        paging.setEndPage(endPage);
+        paging.setMaxPage(maxPage);
+        return paging;
     }
 }

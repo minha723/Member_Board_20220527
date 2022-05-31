@@ -33,6 +33,19 @@
     <button class="btn btn-outline-primary" onclick="hits()">조회순으로 목록보기</button>
 </div>
 
+<div class="container text-end">
+    한 페이지당 글 갯수
+    <form action="/board/viewNum" method="get">
+        <select name="viewNum">
+            <option value="3">3</option>
+            <option value="5">5</option>
+            <option value="7">7</option>
+        </select>
+         <input type="submit" value="조회">
+    </form>
+</div>
+
+
 <%--<div class="container text-end">--%>
 <%--<form action="/board/viewNum" method="get">--%>
 <%--    <select class="" name="viewNum" id="viewNum">--%>
